@@ -12,6 +12,61 @@ use Illuminate\Validation\Rule;
 
 class AdminOrderController extends Controller
 {
+    // GET /api/admin/orders
+    public function index(Request $request): JsonResponse
+    {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'status' => [
+                'nullable',
+                Rule::in([
+                    'pending',
+                    'preparing',
+                    'ready',
+                    'completed',
+                    'cancelled',
+                ]),
+            ],
+            'date' => ['nullable', 'date_format:Y-m-d'],
+            'page' => ['nullable', 'integer', 'min:1'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
+        ]);
+
+        $query = Order::query()
+            ->with('user:id,name,email')
+            ->withCount('items')
+            ->withSum('items as total_quantity', 'quantity');
+
+        // Search orders by customer name or email.
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where(function ($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Filter by order status.
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        // Filter orders by date.
+        if (!empty($filters['date'])) {
+            $query->whereDate('created_at', $filters['date']);
+        }
+
+        $orders = $query
+            ->orderByDesc('id')
+            ->paginate($filters['per_page'] ?? 10)
+            ->withQueryString();
+
+        return response()->json($orders);
+    }
+
     // PATCH /api/admin/orders/{order}/status
     public function updateStatus(
         Request $request,
@@ -30,12 +85,11 @@ class AdminOrderController extends Controller
 
         $updatedOrder = DB::transaction(function () use ($order, $data) {
 
-            // Lock the order to prevent conflicting updates.
+            // Prevent conflicting status updates.
             $lockedOrder = Order::whereKey($order->id)
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            // Allowed status transitions.
             $nextStatus = [
                 'pending' => 'preparing',
                 'preparing' => 'ready',

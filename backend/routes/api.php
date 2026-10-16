@@ -37,6 +37,8 @@ Route::get('/menu-items/{menu_item}', [MenuItemController::class, 'show']);
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {
+        // Admin can view all customer orders.
+Route::get('/admin/orders', [AdminOrderController::class, 'index']);
         // Admin-only order status management
 Route::patch(
     '/admin/orders/{order}/status',
