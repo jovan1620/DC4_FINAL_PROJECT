@@ -1,5 +1,6 @@
 
 <?php
+use App\Http\Controllers\Api\AdminOrderController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\MenuItemController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,11 @@ Route::get('/menu-items/{menu_item}', [MenuItemController::class, 'show']);
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {
+        // Admin-only order status management
+Route::patch(
+    '/admin/orders/{order}/status',
+    [AdminOrderController::class, 'updateStatus']
+);
         // Admin-only Menu Items CRUD
 Route::post('/menu-items', [MenuItemController::class, 'store']);
 
