@@ -11,8 +11,22 @@ Route::post('/register', [AuthController::class, 'register'])
 Route::post('/login', [AuthController::class, 'login'])
     ->middleware('throttle:6,1');
 
-// Routes requiring a valid Sanctum token
+// Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::get('/user', [AuthController::class, 'user']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Admin-only routes
+    Route::middleware('admin')->group(function () {
+
+        Route::get('/admin/check', function () {
+            return response()->json([
+                'message' => 'Admin access granted.',
+            ]);
+        });
+
+    });
+
 });
