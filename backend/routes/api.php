@@ -1,5 +1,6 @@
 
 <?php
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\MenuItemController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -14,6 +15,12 @@ Route::post('/login', [AuthController::class, 'login'])
 
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
+    // Customer ordering
+Route::get('/orders', [OrderController::class, 'index']);
+
+Route::post('/orders', [OrderController::class, 'store']);
+
+Route::get('/orders/{order}', [OrderController::class, 'show']);
 // Admin and Customer can view menu items
 Route::get('/menu-items', [MenuItemController::class, 'index']);
 Route::get('/menu-items/{menu_item}', [MenuItemController::class, 'show']);
