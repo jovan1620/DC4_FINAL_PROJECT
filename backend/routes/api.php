@@ -1,6 +1,6 @@
 
 <?php
-
+use App\Http\Controllers\Api\MenuItemController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
@@ -14,7 +14,9 @@ Route::post('/login', [AuthController::class, 'login'])
 
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
-
+// Admin and Customer can view menu items
+Route::get('/menu-items', [MenuItemController::class, 'index']);
+Route::get('/menu-items/{menu_item}', [MenuItemController::class, 'show']);
     Route::get('/user', [AuthController::class, 'user']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -26,7 +28,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {
+        // Admin-only Menu Items CRUD
+Route::post('/menu-items', [MenuItemController::class, 'store']);
 
+Route::put('/menu-items/{menu_item}', [MenuItemController::class, 'update']);
+
+Route::patch('/menu-items/{menu_item}', [MenuItemController::class, 'update']);
+
+Route::delete('/menu-items/{menu_item}', [MenuItemController::class, 'destroy']);
         Route::get('/admin/check', function () {
             return response()->json([
                 'message' => 'Admin access granted.',
