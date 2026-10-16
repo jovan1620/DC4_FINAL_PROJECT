@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\MenuItem;
@@ -159,4 +159,70 @@ class OrderController extends Controller
             ]),
         ]);
     }
+    
+    // POST /api/orders/{order}/cancel
+    public function cancel(Request $request, Order $order): JsonResponse
+    {
+        // Only customers can use this cancellation endpoint.
+        if ($request->user()->role !== 'customer') {
+            return response()->json([
+                'message' => 'Only customers can cancel their orders.',
+            ], 403);
+        }
+
+        // A customer cannot cancel another customer's order.
+        if ((int) $order->user_id !== (int) $request->user()->id) {
+            abort(404);
+        }
+
+        $cancelledOrder = DB::transaction(function () use ($request, $order) {
+
+            // Lock the order to prevent two requests cancelling it.
+            $lockedOrder = Order::whereKey($order->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ((int) $lockedOrder->user_id !== (int) $request->user()->id) {
+                abort(404);
+            }
+
+            if ($lockedOrder->status !== 'pending') {
+                throw new HttpResponseException(
+                    response()->json([
+                        'message' => 'Only pending orders can be cancelled.',
+                    ], 409)
+                );
+            }
+
+            // Restore stock for every ordered product.
+            $items = $lockedOrder->items()
+                ->orderBy('menu_item_id')
+                ->get();
+
+            foreach ($items as $item) {
+                $menuItem = MenuItem::whereKey($item->menu_item_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                $menuItem->stock_qty += $item->quantity;
+                $menuItem->save();
+            }
+
+            // Mark the order as cancelled.
+            $lockedOrder->status = 'cancelled';
+            $lockedOrder->save();
+
+            return $lockedOrder;
+
+        }, 3);
+
+        return response()->json([
+            'message' => 'Order cancelled successfully. Stock restored.',
+            'data' => $cancelledOrder->load([
+                'user:id,name',
+                'items.menuItem:id,name',
+            ]),
+        ]);
+    }
+
 }

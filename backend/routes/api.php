@@ -21,6 +21,7 @@ Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
 
 Route::get('/orders/{order}', [OrderController::class, 'show']);
+Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
 // Admin and Customer can view menu items
 Route::get('/menu-items', [MenuItemController::class, 'index']);
 Route::get('/menu-items/{menu_item}', [MenuItemController::class, 'show']);
