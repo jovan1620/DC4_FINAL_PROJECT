@@ -1,5 +1,6 @@
 
 <?php
+use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminOrderController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\MenuItemController;
@@ -37,6 +38,11 @@ Route::get('/menu-items/{menu_item}', [MenuItemController::class, 'show']);
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {
+        // Admin Dashboard
+Route::get(
+    '/admin/dashboard',
+    [AdminDashboardController::class, 'index']
+);
         // Admin can view all customer orders.
 Route::get('/admin/orders', [AdminOrderController::class, 'index']);
         // Admin-only order status management
