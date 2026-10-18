@@ -261,3 +261,355 @@ input {
     padding: 25px;
   }
 }
+
+/* Customer Menu */
+
+.canteen-menu {
+  min-height: 100vh;
+  background: #f3f5fa;
+  color: #203b5d;
+}
+
+.canteen-topbar {
+  background: #203b5d;
+  color: white;
+}
+
+.canteen-topbar-inner {
+  max-width: 1180px;
+  min-height: 66px;
+  margin: auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.canteen-brand {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.canteen-brand span {
+  color: #e98122;
+}
+
+.canteen-nav-current {
+  padding: 9px 0;
+  border-bottom: 3px solid #e98122;
+  font-weight: 700;
+}
+
+.canteen-nav-muted {
+  color: #b7c5d6;
+  font-size: 14px;
+}
+
+.canteen-nav-space {
+  flex: 1;
+}
+
+.canteen-cart-toggle {
+  background: #e98122;
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.canteen-user {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.canteen-logout {
+  border: 0;
+  background: transparent;
+  color: #ffd1a5;
+  cursor: pointer;
+}
+
+.canteen-menu-content {
+  max-width: 1180px;
+  margin: auto;
+  padding: 34px 24px 60px;
+}
+
+.canteen-page-heading h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.canteen-page-heading p {
+  color: #7b899b;
+  margin-top: 8px;
+}
+
+.canteen-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0;
+}
+
+.canteen-filters input[type="search"],
+.canteen-filters select {
+  padding: 12px;
+  border: 1px solid #d7deea;
+  border-radius: 7px;
+  background: white;
+  color: #203b5d;
+}
+
+.canteen-filters input[type="search"] {
+  flex: 1 1 240px;
+}
+
+.canteen-filters select {
+  flex: 1 1 180px;
+}
+
+.canteen-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.canteen-food-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.canteen-food-card {
+  background: white;
+  border: 1px solid #dce2eb;
+  border-radius: 11px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(32, 59, 93, 0.04);
+}
+
+.canteen-card-banner {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.canteen-food-initial {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
+  background: #142d4e;
+  color: white;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.canteen-food-body {
+  padding: 18px;
+}
+
+.canteen-food-body h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.canteen-category-tag {
+  display: inline-block;
+  background: #8993a3;
+  color: white;
+  border-radius: 12px;
+  padding: 3px 9px;
+  font-size: 11px;
+}
+
+.canteen-description {
+  margin: 15px 0;
+  min-height: 40px;
+  color: #778698;
+  font-size: 13px;
+}
+
+.canteen-food-bottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.canteen-price {
+  color: #e98122;
+  font-size: 17px;
+}
+
+.canteen-stock {
+  color: #7b899b;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.canteen-stock-low {
+  color: #d0444d;
+  font-weight: 700;
+}
+
+.canteen-add-button {
+  background: #e98122;
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  padding: 9px 16px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.canteen-add-button:disabled {
+  background: #b9c0ca;
+  cursor: not-allowed;
+}
+
+.canteen-success {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-top: 18px;
+  background: #e1f4e9;
+  color: #236c44;
+  border: 1px solid #b4dfc5;
+  border-radius: 8px;
+}
+
+.canteen-success button {
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 20px;
+}
+
+.canteen-error {
+  color: #b4232d;
+  background: #ffeaec;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.canteen-empty {
+  padding: 55px 20px;
+  background: white;
+  border: 1px solid #dce2eb;
+  border-radius: 11px;
+  text-align: center;
+  color: #758497;
+}
+
+.canteen-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 28px;
+  color: #8290a0;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.canteen-page-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.canteen-page-buttons button {
+  border: 1px solid #dce2eb;
+  background: white;
+  color: #203b5d;
+  border-radius: 6px;
+  padding: 6px 13px;
+}
+
+.canteen-page-buttons button:disabled {
+  opacity: 0.4;
+}
+
+.canteen-cart-preview {
+  background: white;
+  border: 1px solid #dce2eb;
+  border-radius: 11px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.canteen-cart-heading,
+.canteen-cart-row,
+.canteen-cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.canteen-cart-heading h2 {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.canteen-cart-heading button,
+.canteen-cart-row button {
+  background: none;
+  border: 0;
+  color: #c25347;
+  cursor: pointer;
+}
+
+.canteen-cart-row {
+  padding: 14px 0;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.canteen-cart-total {
+  padding: 18px 0 8px;
+}
+
+.canteen-cart-hint {
+  color: #8290a0;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .canteen-food-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .canteen-food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .canteen-topbar-inner {
+    gap: 15px;
+    padding: 14px;
+  }
+
+  .canteen-menu-content {
+    padding: 24px 14px;
+  }
+
+  .canteen-user {
+    display: none;
+  }
+}

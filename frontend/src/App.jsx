@@ -6,6 +6,7 @@ import {
   Routes,
   useNavigate,
 } from 'react-router-dom';
+import MenuPage from './pages/MenuPage';
 import { useAuth } from './context/AuthContext';
 
 const destination = (user) =>
@@ -241,7 +242,7 @@ function AuthPage() {
   );
 }
 
-function ProtectedPage({ role }) {
+function ProtectedPage({ role, children }) {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
@@ -253,6 +254,9 @@ function ProtectedPage({ role }) {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+  if (children) {
+  return children;
+}
 
   if (role && user.role !== role) {
     return <Navigate to={destination(user)} replace />;
@@ -306,10 +310,14 @@ export default function App() {
         path="/admin/dashboard"
         element={<ProtectedPage role="admin" />}
       />
-      <Route
-        path="/menu"
-        element={<ProtectedPage role="customer" />}
-      />
+     <Route
+  path="/menu"
+  element={
+    <ProtectedPage role="customer">
+      <MenuPage />
+    </ProtectedPage>
+  }
+/>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
