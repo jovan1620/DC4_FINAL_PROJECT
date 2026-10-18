@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import MenuPage from './pages/MenuPage';
 import { useAuth } from './context/AuthContext';
+import CartPage from './pages/CartPage';
 
 const destination = (user) =>
   user?.role === 'admin' ? '/admin/dashboard' : '/menu';
@@ -252,15 +253,16 @@ function ProtectedPage({ role, children }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  if (children) {
-  return children;
+  return <Navigate to="/login" replace />;
 }
 
-  if (role && user.role !== role) {
-    return <Navigate to={destination(user)} replace />;
-  }
+if (role && user.role !== role) {
+  return <Navigate to={destination(user)} replace />;
+}
+
+if (children) {
+  return children;
+}
 
   async function handleLogout() {
     setSigningOut(true);
@@ -315,6 +317,14 @@ export default function App() {
   element={
     <ProtectedPage role="customer">
       <MenuPage />
+    </ProtectedPage>
+  }
+/>
+<Route
+  path="/cart"
+  element={
+    <ProtectedPage role="customer">
+      <CartPage />
     </ProtectedPage>
   }
 />

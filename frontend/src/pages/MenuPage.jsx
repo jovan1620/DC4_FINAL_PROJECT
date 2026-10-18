@@ -293,9 +293,13 @@ export default function MenuPage() {
                   <strong>{money(cartTotal)}</strong>
                 </div>
 
-                <p className="canteen-cart-hint">
-                  Cart checkout will be added in the next step.
-                </p>
+                <button
+  type="button"
+  className="checkout-primary"
+  onClick={() => navigate('/cart')}
+>
+  Proceed to Checkout
+</button>
               </>
             )}
           </section>
