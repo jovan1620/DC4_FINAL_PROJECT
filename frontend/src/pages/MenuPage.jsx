@@ -200,9 +200,13 @@ export default function MenuPage() {
 
           <span className="canteen-nav-current">Menu</span>
 
-          <span className="canteen-nav-muted">
-            My Orders (coming next)
-          </span>
+          <button
+  type="button"
+  className="orders-menu-link"
+  onClick={() => navigate('/orders')}
+>
+  My Orders
+</button>
 
           <div className="canteen-nav-space" />
 

@@ -190,9 +190,13 @@ export default function CartPage() {
             </div>
 
             <p>
-              Your order is saved in the system. You can check its
-              progress in My Orders once that page is implemented.
-            </p>
+  Your order is saved in the system.
+  You can track its progress in My Orders.
+</p>
+
+<Link to="/orders" className="checkout-primary">
+  View My Orders
+</Link>
 
             <button
               type="button"
