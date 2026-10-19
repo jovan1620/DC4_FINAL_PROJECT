@@ -15,19 +15,41 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ]);
 
-        // Public registration can only create a customer.
+        // The database assigns the default role "customer".
+        // Public registration cannot choose an admin role.
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
         ]);
 
-        $token = $user->createToken('canteen-auth')->plainTextToken;
+        // IMPORTANT FIX:
+        // Reload the database-generated default role
+        // before sending the user back to React.
+        $user->refresh();
+
+        $token = $user
+            ->createToken('canteen-auth')
+            ->plainTextToken;
 
         return response()->json([
             'message' => 'Account created successfully.',
@@ -40,19 +62,38 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
+            'email' => [
+                'required',
+                'email',
+            ],
+            'password' => [
+                'required',
+                'string',
+            ],
         ]);
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where(
+            'email',
+            $data['email']
+        )->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (
+            !$user ||
+            !Hash::check(
+                $data['password'],
+                $user->password
+            )
+        ) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => [
+                    'The provided credentials are incorrect.',
+                ],
             ]);
         }
 
-        $token = $user->createToken('canteen-auth')->plainTextToken;
+        $token = $user
+            ->createToken('canteen-auth')
+            ->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful.',
@@ -72,7 +113,10 @@ class AuthController extends Controller
     // POST /api/logout
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $request
+            ->user()
+            ->currentAccessToken()
+            ->delete();
 
         return response()->json([
             'message' => 'Logged out successfully.',

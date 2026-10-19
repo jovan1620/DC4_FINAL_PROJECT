@@ -108,10 +108,12 @@ export default function MenuPage() {
         setItems([]);
         setError(
           err.response?.data?.message ||
-          'Could not load the menu. Check your Laravel server.'
+            'Could not load the menu. Check your Laravel server.'
         );
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     }, 250);
 
@@ -127,7 +129,8 @@ export default function MenuPage() {
   );
 
   const cartTotal = cart.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity,
+    (sum, item) =>
+      sum + Number(item.price) * item.quantity,
     0
   );
 
@@ -137,7 +140,9 @@ export default function MenuPage() {
     );
 
     if (current && current.quantity >= item.stock_qty) {
-      setNotice(`Only ${item.stock_qty} of ${item.name} are available.`);
+      setNotice(
+        `Only ${item.stock_qty} of ${item.name} are available.`
+      );
       return;
     }
 
@@ -176,7 +181,9 @@ export default function MenuPage() {
 
   function removeFromCart(id) {
     setCart((previous) =>
-      previous.filter((item) => item.menu_item_id !== id)
+      previous.filter(
+        (item) => item.menu_item_id !== id
+      )
     );
   }
 
@@ -198,22 +205,26 @@ export default function MenuPage() {
             Canteen<span>.</span>
           </strong>
 
-          <span className="canteen-nav-current">Menu</span>
+          <span className="canteen-nav-current">
+            Menu
+          </span>
 
           <button
-  type="button"
-  className="orders-menu-link"
-  onClick={() => navigate('/orders')}
->
-  My Orders
-</button>
+            type="button"
+            className="orders-menu-link"
+            onClick={() => navigate('/orders')}
+          >
+            My Orders
+          </button>
 
           <div className="canteen-nav-space" />
 
           <button
             type="button"
             className="canteen-cart-toggle"
-            onClick={() => setCartOpen((value) => !value)}
+            onClick={() =>
+              setCartOpen((value) => !value)
+            }
           >
             Cart ({cartCount})
           </button>
@@ -236,12 +247,18 @@ export default function MenuPage() {
       <main className="canteen-menu-content">
         <div className="canteen-page-heading">
           <h1>Today's Menu</h1>
-          <p>Choose your favorite food and drinks.</p>
+          <p>
+            Choose your favorite food and drinks.
+          </p>
         </div>
 
         {notice && (
-          <div className="canteen-success" role="status">
+          <div
+            className="canteen-success"
+            role="status"
+          >
             {notice}
+
             <button
               type="button"
               onClick={() => setNotice('')}
@@ -256,6 +273,7 @@ export default function MenuPage() {
           <section className="canteen-cart-preview">
             <div className="canteen-cart-heading">
               <h2>Your Cart ({cartCount})</h2>
+
               <button
                 type="button"
                 onClick={() => setCartOpen(false)}
@@ -278,13 +296,17 @@ export default function MenuPage() {
                     </span>
 
                     <strong>
-                      {money(item.price * item.quantity)}
+                      {money(
+                        item.price * item.quantity
+                      )}
                     </strong>
 
                     <button
                       type="button"
                       onClick={() =>
-                        removeFromCart(item.menu_item_id)
+                        removeFromCart(
+                          item.menu_item_id
+                        )
                       }
                     >
                       Remove
@@ -298,12 +320,12 @@ export default function MenuPage() {
                 </div>
 
                 <button
-  type="button"
-  className="checkout-primary"
-  onClick={() => navigate('/cart')}
->
-  Proceed to Checkout
-</button>
+                  type="button"
+                  className="checkout-primary"
+                  onClick={() => navigate('/cart')}
+                >
+                  Proceed to Checkout
+                </button>
               </>
             )}
           </section>
@@ -329,9 +351,15 @@ export default function MenuPage() {
               setPage(1);
             }}
           >
-            <option value="">All categories</option>
+            <option value="">
+              All categories
+            </option>
+
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>
+              <option
+                key={category.id}
+                value={category.id}
+              >
                 {category.name}
               </option>
             ))}
@@ -342,7 +370,9 @@ export default function MenuPage() {
               type="checkbox"
               checked={availableOnly}
               onChange={(event) => {
-                setAvailableOnly(event.target.checked);
+                setAvailableOnly(
+                  event.target.checked
+                );
                 setPage(1);
               }}
             />
@@ -351,7 +381,9 @@ export default function MenuPage() {
         </div>
 
         {error && (
-          <div className="canteen-error">{error}</div>
+          <div className="canteen-error">
+            {error}
+          </div>
         )}
 
         {loading ? (
@@ -364,31 +396,44 @@ export default function MenuPage() {
           </div>
         ) : (
           <div className="canteen-food-grid">
-            {items.map((item, index) => {
+            {items.map((item) => {
               const soldOut =
-                !item.is_available || item.stock_qty <= 0;
+                !item.is_available ||
+                item.stock_qty <= 0;
 
               const lowStock =
-                !soldOut && item.stock_qty <= 5;
+                !soldOut &&
+                item.stock_qty <= 5;
 
               const inCart = cart.find(
-                (entry) => entry.menu_item_id === item.id
+                (entry) =>
+                  entry.menu_item_id === item.id
               );
 
               const cartLimitReached =
-                inCart && inCart.quantity >= item.stock_qty;
+                inCart &&
+                inCart.quantity >= item.stock_qty;
 
               return (
-                <article className="canteen-food-card" key={item.id}>
+                <article
+                  className="canteen-food-card"
+                  key={item.id}
+                >
                   <div
                     className="canteen-card-banner"
                     style={{
                       backgroundColor:
-                        colors[(item.id - 1 + colors.length) % colors.length],
+                        colors[
+                          (item.id - 1 +
+                            colors.length) %
+                            colors.length
+                        ],
                     }}
                   >
                     <div className="canteen-food-initial">
-                      {item.name.charAt(0).toUpperCase()}
+                      {item.name
+                        .charAt(0)
+                        .toUpperCase()}
                     </div>
                   </div>
 
@@ -396,11 +441,13 @@ export default function MenuPage() {
                     <h2>{item.name}</h2>
 
                     <span className="canteen-category-tag">
-                      {item.category?.name || 'Uncategorized'}
+                      {item.category?.name ||
+                        'Uncategorized'}
                     </span>
 
                     <p className="canteen-description">
-                      {item.description || 'Freshly prepared canteen item.'}
+                      {item.description ||
+                        'Freshly prepared canteen item.'}
                     </p>
 
                     <div className="canteen-food-bottom">
@@ -418,21 +465,28 @@ export default function MenuPage() {
                         {soldOut
                           ? 'Sold out'
                           : lowStock
-                          ? `Only ${item.stock_qty} left`
-                          : `Stock: ${item.stock_qty}`}
+                            ? `Only ${item.stock_qty} left`
+                            : `Stock: ${item.stock_qty}`}
                       </span>
 
                       <button
                         type="button"
                         className="canteen-add-button"
-                        disabled={soldOut || Boolean(cartLimitReached)}
-                        onClick={() => addToCart(item)}
+                        disabled={
+                          soldOut ||
+                          Boolean(
+                            cartLimitReached
+                          )
+                        }
+                        onClick={() =>
+                          addToCart(item)
+                        }
                       >
                         {soldOut
                           ? 'Sold out'
                           : cartLimitReached
-                          ? 'Max added'
-                          : 'Add'}
+                            ? 'Max added'
+                            : 'Add'}
                       </button>
                     </div>
                   </div>
@@ -446,24 +500,36 @@ export default function MenuPage() {
           <div className="canteen-page-buttons">
             <button
               type="button"
-              disabled={page <= 1 || loading}
-              onClick={() => setPage((value) => value - 1)}
+              disabled={
+                page <= 1 || loading
+              }
+              onClick={() =>
+                setPage((value) => value - 1)
+              }
             >
               &lt;
             </button>
 
-            <span>Page {page} of {lastPage}</span>
+            <span>
+              Page {page} of {lastPage}
+            </span>
 
             <button
               type="button"
-              disabled={page >= lastPage || loading}
-              onClick={() => setPage((value) => value + 1)}
+              disabled={
+                page >= lastPage || loading
+              }
+              onClick={() =>
+                setPage((value) => value + 1)
+              }
             >
               &gt;
             </button>
           </div>
 
-          <span>Showing {items.length} of {total} items</span>
+          <span>
+            Showing {items.length} of {total} items
+          </span>
         </footer>
       </main>
     </div>

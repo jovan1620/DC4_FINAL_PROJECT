@@ -13,6 +13,14 @@ class Order extends Model
         'notes',
     ];
 
+    // Match the defaults in the orders migration.
+    // Makes new orders immediately report their pending status
+    // even before reloading them from the database.
+    protected $attributes = [
+        'status' => 'pending',
+        'total_amount' => 0,
+    ];
+
     protected function casts(): array
     {
         return [
