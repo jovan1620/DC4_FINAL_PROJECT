@@ -11,6 +11,7 @@ import './AdminDashboard.css';
 export default function AdminLayout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const [signingOut, setSigningOut] = useState(false);
 
   async function handleLogout() {
@@ -21,8 +22,7 @@ export default function AdminLayout({ children }) {
     try {
       await logout();
     } catch {
-      // AuthContext removes the saved token
-      // even when the request fails.
+      // AuthContext removes the saved token.
     } finally {
       navigate('/login', { replace: true });
     }
@@ -53,7 +53,6 @@ export default function AdminLayout({ children }) {
         </div>
 
         <nav className="admin-sidebar-nav">
-          {/* DASHBOARD */}
           <NavLink
             to="/admin/dashboard"
             end
@@ -66,11 +65,9 @@ export default function AdminLayout({ children }) {
             <span className="admin-nav-symbol">
               ▦
             </span>
-
             Dashboard
           </NavLink>
 
-          {/* MENU ITEMS */}
           <NavLink
             to="/admin/menu-items"
             className={({ isActive }) =>
@@ -82,11 +79,9 @@ export default function AdminLayout({ children }) {
             <span className="admin-nav-symbol">
               ▤
             </span>
-
             Menu Items
           </NavLink>
 
-          {/* CATEGORIES */}
           <NavLink
             to="/admin/categories"
             className={({ isActive }) =>
@@ -98,22 +93,25 @@ export default function AdminLayout({ children }) {
             <span className="admin-nav-symbol">
               ▥
             </span>
-
             Categories
           </NavLink>
 
-          {/* ORDERS — NEXT STEP */}
-          <span className="admin-sidebar-link disabled">
+          <NavLink
+            to="/admin/orders"
+            className={({ isActive }) =>
+              `admin-sidebar-link ${
+                isActive ? 'active' : ''
+              }`
+            }
+          >
             <span className="admin-nav-symbol">
               ☷
             </span>
-
             Orders
-            <small>Soon</small>
-          </span>
+          </NavLink>
         </nav>
 
-        {/* USER AND LOGOUT */}
+        {/* ADMIN PROFILE */}
         <div className="admin-sidebar-bottom">
           <div className="admin-profile">
             <div className="admin-profile-avatar">
@@ -134,8 +132,8 @@ export default function AdminLayout({ children }) {
           <button
             type="button"
             className="admin-sidebar-logout"
-            onClick={handleLogout}
             disabled={signingOut}
+            onClick={handleLogout}
           >
             {signingOut
               ? 'Logging out...'
@@ -169,8 +167,8 @@ export default function AdminLayout({ children }) {
 
           <button
             type="button"
-            onClick={handleLogout}
             disabled={signingOut}
+            onClick={handleLogout}
             style={{
               background: '#e98122',
               color: 'white',

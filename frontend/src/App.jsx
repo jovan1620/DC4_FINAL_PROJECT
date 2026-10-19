@@ -15,6 +15,7 @@ import MyOrdersPage from './pages/MyOrdersPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminMenuItemsPage from './pages/AdminMenuItemsPage';
 import AdminCategoriesPage from './pages/AdminCategoriesPage';
+import AdminOrdersPage from './pages/AdminOrdersPage';
 
 const destination = (user) =>
   user?.role === 'admin'
@@ -55,7 +56,8 @@ function AuthPage() {
   });
 
   const [loginErrors, setLoginErrors] = useState({});
-  const [registerErrors, setRegisterErrors] = useState({});
+  const [registerErrors, setRegisterErrors] =
+    useState({});
 
   const [loginMessage, setLoginMessage] = useState('');
   const [registerMessage, setRegisterMessage] =
@@ -379,7 +381,7 @@ function AuthPage() {
   );
 }
 
-// PROTECTED ROUTE
+// ROLE-PROTECTED ROUTES
 function ProtectedPage({ role, children }) {
   const { user, loading } = useAuth();
 
@@ -416,9 +418,7 @@ export default function App() {
       {/* DEFAULT */}
       <Route
         path="/"
-        element={
-          <Navigate to="/login" replace />
-        }
+        element={<Navigate to="/login" replace />}
       />
 
       {/* PUBLIC */}
@@ -462,6 +462,16 @@ export default function App() {
         }
       />
 
+      {/* ADMIN ORDERS */}
+      <Route
+        path="/admin/orders"
+        element={
+          <ProtectedPage role="admin">
+            <AdminOrdersPage />
+          </ProtectedPage>
+        }
+      />
+
       {/* CUSTOMER MENU */}
       <Route
         path="/menu"
@@ -495,9 +505,7 @@ export default function App() {
       {/* UNKNOWN URL */}
       <Route
         path="*"
-        element={
-          <Navigate to="/" replace />
-        }
+        element={<Navigate to="/" replace />}
       />
     </Routes>
   );
