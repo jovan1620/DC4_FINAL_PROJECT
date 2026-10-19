@@ -14,22 +14,32 @@ import CartPage from './pages/CartPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminMenuItemsPage from './pages/AdminMenuItemsPage';
+import AdminCategoriesPage from './pages/AdminCategoriesPage';
 
 const destination = (user) =>
-  user?.role === 'admin' ? '/admin/dashboard' : '/menu';
+  user?.role === 'admin'
+    ? '/admin/dashboard'
+    : '/menu';
 
 function FieldError({ errors, name }) {
   const message = errors?.[name]?.[0];
 
   return message ? (
-    <div className="field-error">{message}</div>
+    <div className="field-error">
+      {message}
+    </div>
   ) : null;
 }
 
 // LOGIN AND REGISTRATION
-
 function AuthPage() {
-  const { user, loading, login, register } = useAuth();
+  const {
+    user,
+    loading,
+    login,
+    register,
+  } = useAuth();
+
   const navigate = useNavigate();
 
   const [loginForm, setLoginForm] = useState({
@@ -48,7 +58,8 @@ function AuthPage() {
   const [registerErrors, setRegisterErrors] = useState({});
 
   const [loginMessage, setLoginMessage] = useState('');
-  const [registerMessage, setRegisterMessage] = useState('');
+  const [registerMessage, setRegisterMessage] =
+    useState('');
 
   const [busy, setBusy] = useState('');
 
@@ -74,7 +85,7 @@ function AuthPage() {
 
       setLoginMessage(
         error.response?.data?.message ||
-        'Unable to log in. Please try again.'
+          'Unable to log in. Please try again.'
       );
     } finally {
       setBusy('');
@@ -98,6 +109,7 @@ function AuthPage() {
           'Passwords do not match.',
         ],
       });
+
       return;
     }
 
@@ -116,7 +128,7 @@ function AuthPage() {
 
       setRegisterMessage(
         error.response?.data?.message ||
-        'Registration failed. Please check your information.'
+          'Registration failed. Please check your information.'
       );
     } finally {
       setBusy('');
@@ -144,11 +156,15 @@ function AuthPage() {
     <main className="auth-screen">
       <div className="auth-container">
         <header className="auth-header">
-          <div className="logo-mark">C</div>
+          <div className="logo-mark">
+            C
+          </div>
 
           <h1>
             Canteen
-            <span className="orange-dot">.</span>
+            <span className="orange-dot">
+              .
+            </span>
           </h1>
 
           <p>
@@ -158,7 +174,6 @@ function AuthPage() {
 
         <div className="auth-grid">
           {/* LOGIN FORM */}
-
           <section className="auth-card login-card">
             <h2>Welcome back</h2>
 
@@ -236,7 +251,6 @@ function AuthPage() {
           </section>
 
           {/* REGISTRATION FORM */}
-
           <section className="auth-card register-card">
             <h2>Create account</h2>
 
@@ -365,8 +379,7 @@ function AuthPage() {
   );
 }
 
-// ROLE-PROTECTED ROUTES
-
+// PROTECTED ROUTE
 function ProtectedPage({ role, children }) {
   const { user, loading } = useAuth();
 
@@ -379,7 +392,9 @@ function ProtectedPage({ role, children }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate to="/login" replace />
+    );
   }
 
   if (role && user.role !== role) {
@@ -395,15 +410,18 @@ function ProtectedPage({ role, children }) {
 }
 
 // APPLICATION ROUTES
-
 export default function App() {
   return (
     <Routes>
+      {/* DEFAULT */}
       <Route
         path="/"
-        element={<Navigate to="/login" replace />}
+        element={
+          <Navigate to="/login" replace />
+        }
       />
 
+      {/* PUBLIC */}
       <Route
         path="/login"
         element={<AuthPage />}
@@ -414,8 +432,7 @@ export default function App() {
         element={<AuthPage />}
       />
 
-      {/* ADMIN PAGES */}
-
+      {/* ADMIN DASHBOARD */}
       <Route
         path="/admin/dashboard"
         element={
@@ -425,6 +442,7 @@ export default function App() {
         }
       />
 
+      {/* ADMIN MENU ITEMS */}
       <Route
         path="/admin/menu-items"
         element={
@@ -434,8 +452,17 @@ export default function App() {
         }
       />
 
-      {/* CUSTOMER PAGES */}
+      {/* ADMIN CATEGORIES */}
+      <Route
+        path="/admin/categories"
+        element={
+          <ProtectedPage role="admin">
+            <AdminCategoriesPage />
+          </ProtectedPage>
+        }
+      />
 
+      {/* CUSTOMER MENU */}
       <Route
         path="/menu"
         element={
@@ -445,6 +472,7 @@ export default function App() {
         }
       />
 
+      {/* CUSTOMER CART */}
       <Route
         path="/cart"
         element={
@@ -454,6 +482,7 @@ export default function App() {
         }
       />
 
+      {/* CUSTOMER ORDERS */}
       <Route
         path="/orders"
         element={
@@ -463,9 +492,12 @@ export default function App() {
         }
       />
 
+      {/* UNKNOWN URL */}
       <Route
         path="*"
-        element={<Navigate to="/" replace />}
+        element={
+          <Navigate to="/" replace />
+        }
       />
     </Routes>
   );
