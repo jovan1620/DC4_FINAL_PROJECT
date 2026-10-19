@@ -13,6 +13,7 @@ import MenuPage from './pages/MenuPage';
 import CartPage from './pages/CartPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminMenuItemsPage from './pages/AdminMenuItemsPage';
 
 const destination = (user) =>
   user?.role === 'admin' ? '/admin/dashboard' : '/menu';
@@ -364,7 +365,7 @@ function AuthPage() {
   );
 }
 
-// PROTECTED ROUTES
+// ROLE-PROTECTED ROUTES
 
 function ProtectedPage({ role, children }) {
   const { user, loading } = useAuth();
@@ -403,7 +404,6 @@ export default function App() {
         element={<Navigate to="/login" replace />}
       />
 
-      {/* PUBLIC */}
       <Route
         path="/login"
         element={<AuthPage />}
@@ -414,7 +414,8 @@ export default function App() {
         element={<AuthPage />}
       />
 
-      {/* ADMIN */}
+      {/* ADMIN PAGES */}
+
       <Route
         path="/admin/dashboard"
         element={
@@ -424,7 +425,17 @@ export default function App() {
         }
       />
 
-      {/* CUSTOMER */}
+      <Route
+        path="/admin/menu-items"
+        element={
+          <ProtectedPage role="admin">
+            <AdminMenuItemsPage />
+          </ProtectedPage>
+        }
+      />
+
+      {/* CUSTOMER PAGES */}
+
       <Route
         path="/menu"
         element={
@@ -452,7 +463,6 @@ export default function App() {
         }
       />
 
-      {/* UNKNOWN URL */}
       <Route
         path="*"
         element={<Navigate to="/" replace />}
