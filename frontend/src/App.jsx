@@ -8,15 +8,15 @@ import {
 } from 'react-router-dom';
 
 import { useAuth } from './context/AuthContext';
+
 import MenuPage from './pages/MenuPage';
 import CartPage from './pages/CartPage';
 import MyOrdersPage from './pages/MyOrdersPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
-// Redirect users based on their role.
 const destination = (user) =>
   user?.role === 'admin' ? '/admin/dashboard' : '/menu';
 
-// Display Laravel validation errors.
 function FieldError({ errors, name }) {
   const message = errors?.[name]?.[0];
 
@@ -25,7 +25,8 @@ function FieldError({ errors, name }) {
   ) : null;
 }
 
-// LOGIN AND REGISTRATION PAGE
+// LOGIN AND REGISTRATION
+
 function AuthPage() {
   const { user, loading, login, register } = useAuth();
   const navigate = useNavigate();
@@ -141,7 +142,6 @@ function AuthPage() {
   return (
     <main className="auth-screen">
       <div className="auth-container">
-
         <header className="auth-header">
           <div className="logo-mark">C</div>
 
@@ -156,8 +156,8 @@ function AuthPage() {
         </header>
 
         <div className="auth-grid">
-
           {/* LOGIN FORM */}
+
           <section className="auth-card login-card">
             <h2>Welcome back</h2>
 
@@ -230,12 +230,12 @@ function AuthPage() {
             </form>
 
             <p className="auth-tip">
-              No account yet? Fill out the
-              registration form.
+              No account yet? Fill out the registration form.
             </p>
           </section>
 
           {/* REGISTRATION FORM */}
+
           <section className="auth-card register-card">
             <h2>Create account</h2>
 
@@ -358,36 +358,16 @@ function AuthPage() {
               </button>
             </form>
           </section>
-
         </div>
       </div>
     </main>
   );
 }
 
-// PROTECTED ROUTE COMPONENT
+// PROTECTED ROUTES
+
 function ProtectedPage({ role, children }) {
-  const { user, loading, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const [signingOut, setSigningOut] = useState(false);
-
-  async function handleLogout() {
-    if (signingOut) return;
-
-    setSigningOut(true);
-
-    try {
-      await logout();
-    } catch {
-      // AuthContext removes the local token even
-      // if the logout API request fails.
-    } finally {
-      navigate('/login', {
-        replace: true,
-      });
-    }
-  }
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -397,14 +377,10 @@ function ProtectedPage({ role, children }) {
     );
   }
 
-  // Visitors must log in.
   if (!user) {
-    return (
-      <Navigate to="/login" replace />
-    );
+    return <Navigate to="/login" replace />;
   }
 
-  // Check permissions BEFORE rendering children.
   if (role && user.role !== role) {
     return (
       <Navigate
@@ -414,66 +390,20 @@ function ProtectedPage({ role, children }) {
     );
   }
 
-  // Render the actual protected page.
-  if (children) {
-    return children;
-  }
-
-  // Temporary Admin Dashboard placeholder.
-  return (
-    <main className="placeholder-screen">
-      <nav className="app-navbar">
-        <strong>
-          Canteen
-          <span className="orange-dot">.</span>
-        </strong>
-
-        <button
-          type="button"
-          onClick={handleLogout}
-          disabled={signingOut}
-        >
-          {signingOut ? 'Logging out...' : 'Logout'}
-        </button>
-      </nav>
-
-      <section className="welcome-card">
-        <div className="role-pill">
-          {user.role === 'admin'
-            ? 'Administrator'
-            : 'Customer'}
-        </div>
-
-        <h1>Welcome, {user.name}!</h1>
-
-        <p>
-          You have logged in successfully.
-        </p>
-
-        <div className="setup-notice">
-          {user.role === 'admin'
-            ? 'The Admin Dashboard interface will be added in the next frontend steps.'
-            : 'The Customer Menu and ordering interface will be added in the next frontend steps.'}
-        </div>
-      </section>
-    </main>
-  );
+  return children;
 }
 
 // APPLICATION ROUTES
+
 export default function App() {
   return (
     <Routes>
-
-      {/* DEFAULT ROUTE */}
       <Route
         path="/"
-        element={
-          <Navigate to="/login" replace />
-        }
+        element={<Navigate to="/login" replace />}
       />
 
-      {/* PUBLIC ROUTES */}
+      {/* PUBLIC */}
       <Route
         path="/login"
         element={<AuthPage />}
@@ -484,15 +414,17 @@ export default function App() {
         element={<AuthPage />}
       />
 
-      {/* ADMIN ROUTES */}
+      {/* ADMIN */}
       <Route
         path="/admin/dashboard"
         element={
-          <ProtectedPage role="admin" />
+          <ProtectedPage role="admin">
+            <AdminDashboardPage />
+          </ProtectedPage>
         }
       />
 
-      {/* CUSTOMER MENU */}
+      {/* CUSTOMER */}
       <Route
         path="/menu"
         element={
@@ -502,7 +434,6 @@ export default function App() {
         }
       />
 
-      {/* CUSTOMER CART AND CHECKOUT */}
       <Route
         path="/cart"
         element={
@@ -512,7 +443,6 @@ export default function App() {
         }
       />
 
-      {/* CUSTOMER ORDER HISTORY */}
       <Route
         path="/orders"
         element={
@@ -522,14 +452,11 @@ export default function App() {
         }
       />
 
-      {/* UNKNOWN ROUTES */}
+      {/* UNKNOWN URL */}
       <Route
         path="*"
-        element={
-          <Navigate to="/" replace />
-        }
+        element={<Navigate to="/" replace />}
       />
-
     </Routes>
   );
 }
